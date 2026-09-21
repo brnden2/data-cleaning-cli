@@ -6,53 +6,51 @@
 
 
 
-Build a Python command-line program that cleans CSV data using small reusable functions.
+This project is a Python command-line program that cleans CSV data using reusable functions.
 
 
 
-\## cleaning Rules
+\## Features
 
 
-
-The program will:
 
 
 
 * Detect empty required values
 * Detect duplicate rows
-* Detect invalid values
-* Keep valid rows
-* \- Save cleaned data into a new CSV file
+* Detect invalid age values
+* Validates required CSV headers
+* Handles missing input files
+* Handles empty CSV files
+* Save cleaned data into a new CSV file
 
 
 
-\## Input Cases
+\## Required CSV Columns
 
 
 
-The program should handle:
+The input CSV must contain:
 
 
 
-* Normal input
-* Empty input
-* Invalid input
+* name
+* email
+* age
 
 
 
-\## Week 2 Learning Goals
+\## How to Run
 
 
 
-* Practice conditions
-* Practice loops
-* Write reusable functions
-* Test functions
-* Build a command-line interface
+python src/cleaner.py data/messy\_data.csv output/cleaned\_data.csv
 
 
 
-\## Planned Data Flow
+\## Data Flow
+
+
 
 
 
@@ -60,13 +58,88 @@ CSV input
 
 \-> Read each row
 
-\-> Check Empty values
+\-> Check required headers
 
-\-> Check invalid values
+\-> Check empty values
+
+\-> Validate age
 
 \-> Check duplicates
 
 \-> Keep valid rows
 
 \-> Save cleaned CSV output
+
+
+
+\## Example Input
+
+
+
+name,email,age
+
+John,John@email.com,25
+
+Sarah,sarah@gmail.com,22
+
+,missing@gmail.com,30
+
+David,david@gmail.com,abc
+
+John,John@email.com,25
+
+Emily,,28
+
+Michael,michael@gmail.com,35
+
+
+
+\## Example Output
+
+
+
+name,email,age
+
+John,John@gmail.com,25
+
+Sarah,sarah@gmail.com,22
+
+Michael,michael@gmail.com,35
+
+
+
+\## Error Handling
+
+
+
+The CLI handles:
+
+
+
+* Missing input files
+* Empty CSV files
+* Missing required columns
+* Empty name or email values
+* Invalid age values
+* Duplicate rows
+
+
+
+\## Reusable Functions 
+
+
+
+\### is\_empty()
+
+
+
+checks whether a required value is empty.
+
+
+
+\### is\_duplicate()
+
+
+
+Checks whether the same row has already appeared in the dataset.
 
