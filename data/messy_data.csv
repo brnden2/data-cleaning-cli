@@ -1,0 +1,8 @@
+name,email,age
+John,John@email.com,25
+Sarah,sarah@gmail.com,22
+,missing@gmail.com,30
+David,david@gmail.com,abc
+John,John@email.com,25
+Emily,,28
+Michael,michael@gmail.com,35
