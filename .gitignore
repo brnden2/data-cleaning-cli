@@ -1,4 +1,5 @@
 __pycache__/
 *.pyc
 *.log
-output/*.csv
+output/**
+!output/.gitkeep
