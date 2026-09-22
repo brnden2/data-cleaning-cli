@@ -1,62 +1,41 @@
-import csv
 import sys
 
-from cleaning_functions import is_empty, is_valid_age, is_duplicate
+from csv_utils import read_csv, write_csv
+from validators import is_empty, is_valid_age, is_duplicate
 
 
-def clean_csv(input_file, output_file):
+def clean_rows(rows):
     cleaned_rows = []
     rejected_rows = 0
+    seen_rows = set()
 
-    with open(input_file, "r", encoding="utf-8") as csv_file:
-        reader = csv.DictReader(csv_file)
+    for row in rows:
+        if is_empty(row["name"]) or is_empty(row["email"]):
+            print("Rejected - empty value:", row)
+            rejected_rows += 1
+            continue
 
-        if reader.fieldnames is None:
-            raise ValueError(
-                "Input CSV is empty or does not contain a header."
-            )
+        if not is_valid_age(row["age"]):
+            print("Rejected - invalid age:", row)
+            rejected_rows += 1
+            continue
 
-        required_headers = ["name", "email", "age"]
+        if is_duplicate(row, seen_rows):
+            print("Rejected - duplicate:", row)
+            rejected_rows += 1
+            continue
 
-        for header in required_headers:
-            if header not in reader.fieldnames:
-                raise ValueError(
-                    f"Missing required column: {header}"
-                )
+        cleaned_rows.append(row)
 
-        for row in reader:
-            if is_empty(row["name"]) or is_empty(row["email"]):
-                print("Rejected - empty value:", row)
-                rejected_rows += 1
-                continue
+    return cleaned_rows, rejected_rows
 
-            if not is_valid_age(row["age"]):
-                print("Rejected - invalid age:", row)
-                rejected_rows += 1
-                continue
 
-            if is_duplicate(row):
-                print("Rejected - duplicate:", row)
-                rejected_rows += 1
-                continue
+def run_cleaner(input_file, output_file):
+    rows = read_csv(input_file)
 
-            cleaned_rows.append(row)
+    cleaned_rows, rejected_rows = clean_rows(rows)
 
-    with open(
-        output_file,
-        "w",
-        newline="",
-        encoding="utf-8"
-    ) as csv_file:
-        fieldnames = ["name", "email", "age"]
-
-        writer = csv.DictWriter(
-            csv_file,
-            fieldnames=fieldnames
-        )
-
-        writer.writeheader()
-        writer.writerows(cleaned_rows)
+    write_csv(output_file, cleaned_rows)
 
     print("--------------------")
     print("Cleaning completed.")
@@ -75,13 +54,10 @@ else:
     output_file = sys.argv[2]
 
     try:
-        clean_csv(input_file, output_file)
+        run_cleaner(input_file, output_file)
 
     except FileNotFoundError:
-        print(
-            "Error: Input file not found:",
-            input_file
-        )
+        print("Error: Input file not found:", input_file)
 
     except ValueError as error:
         print("Error:", error)
