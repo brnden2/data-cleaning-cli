@@ -1,5 +1,7 @@
 import csv
 
+from pathlib import Path
+
 
 REQUIRED_HEADERS = ["name", "email", "age"]
 
@@ -23,8 +25,15 @@ def read_csv(input_file):
 
 
 def write_csv(output_file, rows):
+    output_path = Path(output_file)
+    
+    output_path.parent.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
     with open(
-        output_file,
+        output_path,
         "w",
         newline="",
         encoding="utf-8"
